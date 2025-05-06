@@ -132,3 +132,6 @@ with col2:
         plt.xlabel("Область")
         plt.ylabel(st.session_state.index)
         st.pyplot(plt.gcf())
+
+
+        a = 123
