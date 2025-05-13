@@ -3,3 +3,5 @@ venv/
 .vscode/
 *.ipynb_checkpoints
 lab_2/Pros_data
+*.exe
+lab_4/data
