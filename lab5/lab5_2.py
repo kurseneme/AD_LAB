@@ -3,7 +3,6 @@ import plotly.graph_objs as go
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
-from scipy.signal import butter, filtfilt
 
 start_amplitude = 1.0
 start_freq = 1.0
@@ -17,14 +16,6 @@ sampling_rate = 1.0 / (time[1] - time[0])
 
 
 noise = np.random.normal(start_noise_mean, start_noise_std, size=time.shape)
-
-
-def butterworth_filter(harmonic, cutoff_freq, sampling_rate, window_size):
-    normalized_cutoff = cutoff_freq / (0.5 * sampling_rate)
-    b, a = butter(window_size, normalized_cutoff, btype='low')
-    butterworth_filtered = filtfilt(b, a, harmonic)
-    return butterworth_filtered
-
 
 def ma_filter(harmonic, window_size):
     window_size = int(window_size)
@@ -68,7 +59,7 @@ app.layout = html.Div([
 
         html.Label("Filter:"),
         dcc.Dropdown(id='filter-type',
-                    options=[{'label': 'Moving Average', 'value': 'MovingAvarage'}, {'label': 'Butterworth', 'value': 'Butterworth'}],
+                    options=[{'label': 'Moving Average', 'value': 'MovingAvarage'}],
                     value='MovingAvarage', clearable=False),
 
         html.Button('Reset', id='reset-btn', n_clicks=0, style={
@@ -134,9 +125,6 @@ def update_graphs(amplitude, frequency, phase, noise_mean, noise_std, show_noise
 
     if filter_type == 'MovingAvarage':
         filtered = ma_filter(raw, window)
-    elif filter_type == 'Butterworth':
-        cutoff_freq = min(sampling_rate / window, 0.999 * sampling_rate / 2)
-        filtered = butterworth_filter(raw, cutoff_freq=cutoff_freq, sampling_rate=sampling_rate, window_size=window)
     else:
         filtered = raw
 
